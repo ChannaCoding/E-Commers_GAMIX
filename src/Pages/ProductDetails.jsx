@@ -3,7 +3,7 @@ import { ShoppingCart, Heart, ArrowLeft, ShieldCheck, Truck, Star } from "lucide
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { addToCart } from "../Features/cart/cartSlice";
-import { toggleFavorite } from "../Features/favorite/favoriteSlice";
+import { toggleFavorite } from "../Features/Favorite/favoriteSlice";
 
 const ProductDetails = () => {
   const { id } = useParams();

@@ -1,16 +1,4 @@
-import {
-  Heart,
-  ShoppingCart,
-  User,
-  Menu,
-  X,
-  Info,
-  Home,
-  HelpCircle,
-  Mail,
-  Search,
-  LogOut,
-  Settings,
+import {Heart,ShoppingCart,User,Menu,X,Info,Home,HelpCircle,Mail,Search,LogOut,Settings,
 } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { loginSuccess } from "../Features/auth/authSlice";
+import { loginSuccess } from "../Features/Auth/authSlice";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Mail, Lock, X, ArrowRight } from "lucide-react";
 

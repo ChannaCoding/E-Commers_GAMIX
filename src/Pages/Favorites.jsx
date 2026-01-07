@@ -2,7 +2,7 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Heart, ShoppingCart, ArrowLeft, ShoppingBag } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
-import { toggleFavorite } from "../Features/favorite/favoriteSlice";
+import { toggleFavorite } from "../Features/Favorite/favoriteSlice";
 import { addToCart } from "../Features/cart/cartSlice";
 
 const Favorites = () => {
