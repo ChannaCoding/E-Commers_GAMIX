@@ -3,7 +3,7 @@ import { ChevronLeft, ChevronRight, Zap, ShieldCheck, Truck, Trophy } from "luci
 import Banner2 from "../assets/Images/Benner2.jpg";
 import Banner3 from "../assets/Images/Benner12.jpg";
 import Banner4 from "../assets/Images/Benner4.jpg";
-import Banner5 from "../assets/Images/benner10.jpg";
+import Banner5 from "../assets/Images/Benner10.jpg";
 import Banner6 from "../assets/Images/Benner6.jpg";
 import Banner7 from "../assets/Images/Benner7.jpg";
 import Banner8 from "../assets/Images/Benner11.jpg";
