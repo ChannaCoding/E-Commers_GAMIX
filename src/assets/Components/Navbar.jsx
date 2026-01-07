@@ -1,5 +1,4 @@
-import {Heart,ShoppingCart,User,Menu,X,Info,Home,HelpCircle,Mail,Search,LogOut,Settings,
-} from "lucide-react";
+import {Heart,ShoppingCart,User,Menu,X,Info,Home,HelpCircle,Mail,Search,LogOut,Settings,} from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, NavLink, useNavigate } from "react-router-dom";
@@ -12,6 +11,7 @@ const Navbar = () => {
   const [showMobileSearch, setShowMobileSearch] = useState(false);
 
   const menuRef = useRef(null);
+  const mobileNavRef = useRef(null); // Ref សម្រាប់គ្រប់គ្រងការចុចក្រៅនៅលើ Mobile
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -40,10 +40,16 @@ const Navbar = () => {
     navigate("/");
   };
 
+  // បិទ Menu ឬ Search ពេលចុចកន្លែងផ្សេង (Click Outside)
   useEffect(() => {
     const handleClickOutside = (e) => {
+      // បិទ User Menu Desktop
       if (menuRef.current && !menuRef.current.contains(e.target)) {
         setUserMenu(false);
+      }
+      // បិទ Mobile Search Dropdown
+      if (mobileNavRef.current && !mobileNavRef.current.contains(e.target)) {
+        setShowMobileSearch(false);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
@@ -79,7 +85,7 @@ const Navbar = () => {
       <nav className="max-w-7xl mx-auto px-4 md:px-20 py-4 flex justify-between items-center">
         
         {/* --- FIXED MOBILE LAYOUT --- */}
-        <div className="flex flex-col w-full md:hidden gap-4">
+        <div className="flex flex-col w-full md:hidden gap-4" ref={mobileNavRef}>
           <div className="flex justify-between items-center w-full">
             <button className="p-1 text-gray-800" onClick={() => setMobileOpen(true)}>
               <Menu size={26} strokeWidth={2.5} />
@@ -98,15 +104,20 @@ const Navbar = () => {
           </div>
           
           <div className="flex justify-between items-center w-full">
-            <Link to="/" className="text-2xl font-[1000] italic text-gray-900 tracking-tighter">
-              GAM<span className="text-orange-600">MAX</span>
+            {/* Logo GAMMAX យកតាមស្ទីលរូបភាពថ្មី */}
+            <Link to="/" className="text-2xl font-[1000] italic tracking-tighter flex items-center">
+              <span className="text-gray-900">GAM</span>
+              <span className="text-orange-600">MAX</span>
             </Link>
+
             <div className="flex items-center gap-1">
-              <button className="p-2 text-gray-800" onClick={() => setShowMobileSearch(!showMobileSearch)}>
+              <button 
+                className={`p-2 transition-colors ${showMobileSearch ? "text-orange-600" : "text-gray-800"}`} 
+                onClick={() => setShowMobileSearch(!showMobileSearch)}
+              >
                 <Search size={24} strokeWidth={2.5} />
               </button>
 
-              {/* Mobile Favorite Badge */}
               <button onClick={() => requireAuth("/favorites")} className="relative p-2 text-gray-800">
                 <Heart size={24} strokeWidth={2.5} className={isAuthenticated && favoriteCount > 0 ? "fill-red-500 text-red-500" : ""} />
                 {isAuthenticated && favoriteCount > 0 && (
@@ -116,7 +127,6 @@ const Navbar = () => {
                 )}
               </button>
 
-              {/* Mobile Cart Badge */}
               <button onClick={() => requireAuth("/cart")} className="relative p-2 text-gray-800">
                 <ShoppingCart size={24} strokeWidth={2.5} />
                 {isAuthenticated && cartCount > 0 && (
@@ -127,9 +137,26 @@ const Navbar = () => {
               </button>
             </div>
           </div>
+
+          {/* Mobile Search Dropdown */}
+          {showMobileSearch && (
+            <div className="animate-in slide-in-from-top-2 duration-200">
+              <div className="relative">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+                <input
+                  autoFocus
+                  type="text"
+                  placeholder="Search premium gear..."
+                  className="w-full bg-gray-50 border border-gray-200 rounded-xl pl-11 pr-4 py-2.5 outline-none focus:ring-2 focus:ring-orange-600/20 text-sm font-medium"
+                  value={searchTerm}
+                  onChange={(e) => dispatch(setSearchTerm(e.target.value))}
+                />
+              </div>
+            </div>
+          )}
         </div>
 
-        {/* Desktop Layout */}
+        {/* Desktop Layout (រក្សាដដែល) */}
         <div className="hidden md:flex w-full justify-between items-center">
           <Link to="/" className="text-3xl font-[1000] italic text-gray-900 tracking-tighter shrink-0">
             GAM<span className="text-orange-600">MAX</span>
@@ -174,12 +201,8 @@ const Navbar = () => {
                     <p className="text-[10px] font-black text-orange-600 uppercase tracking-widest">Account</p>
                     <p className="text-xs font-bold truncate text-gray-800">{user?.name}</p>
                   </div>
-                  {/* រក្សាកូដដដែល គ្រាន់តែផ្ទៀងផ្ទាត់កន្លែងនេះ */}
                   <button 
-                    onClick={() => {
-                      navigate("/settings"); 
-                      setUserMenu(false); // ត្រូវប្រាកដថាបិទ Menu ក្រោយពេលចុច
-                    }} 
+                    onClick={() => { navigate("/settings"); setUserMenu(false); }} 
                     className="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-bold text-gray-600 hover:bg-orange-50 hover:text-orange-600 transition-all"
                   >
                     <Settings size={16}/> Settings
@@ -197,24 +220,24 @@ const Navbar = () => {
         <div className={`absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-300 ${mobileOpen ? "opacity-100" : "opacity-0"}`} onClick={() => setMobileOpen(false)} />
         
         <div className={`fixed top-0 left-0 h-full w-[290px] bg-white z-[120] shadow-2xl flex flex-col transform transition-transform duration-300 ease-out ${mobileOpen ? "translate-x-0" : "-translate-x-full"}`}>
-          <div className="relative p-8 bg-[#111] overflow-hidden">
+          <div className="relative p-8 bg-[#070707] overflow-hidden">
             <div className="absolute top-0 right-0 w-32 h-32 bg-orange-600/20 blur-[50px] rounded-full -mr-16 -mt-16" />
-            <div className="absolute bottom-0 left-0 w-24 h-24 bg-orange-600/10 blur-[40px] rounded-full -ml-12 -mb-12" />
-
+            
             <div className="relative z-10 flex flex-col gap-1.5">
+              {/* Logo GAMMAX យកតាមស្ទីលរូបភាព GAMIX របស់អ្នក (Gradient & Glow) */}
               <Link to="/" onClick={() => setMobileOpen(false)} className="text-3xl font-[1000] italic tracking-tighter flex items-center">
-                <span className="text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.2)]">GAM</span>
+                <span className="text-white">GAM</span>
                 <span className="relative">
                   <span className="bg-gradient-to-r from-orange-500 via-orange-400 to-yellow-400 bg-clip-text text-transparent">MAX</span>
-                  <span className="absolute -right-2 top-0 w-1.5 h-1.5 bg-orange-500 rounded-full animate-pulse shadow-[0_0_10px_#ea580c]" />
+                  <span className="absolute -right-3 top-0 w-2 h-2 bg-orange-500 rounded-full animate-pulse shadow-[0_0_10px_#ea580c]" />
                 </span>
               </Link>
               <div className="flex items-center gap-2">
                 <span className="h-[1px] w-5 bg-orange-600" />
-                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-400">Premium Store</span>
+                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-400">PREMIUM STORE</span>
               </div>
             </div>
-            <button onClick={() => setMobileOpen(false)} className="absolute top-8 right-6 p-2 bg-white/5 hover:bg-white/10 text-white/50 hover:text-white rounded-xl border border-white/10 transition-all active:scale-90">
+            <button onClick={() => setMobileOpen(false)} className="absolute top-8 right-6 p-2 bg-white/5 text-white/50 rounded-xl border border-white/10">
               <X size={18} strokeWidth={3} />
             </button>
           </div>
@@ -228,29 +251,25 @@ const Navbar = () => {
             <div className="my-6 border-t border-gray-50 mx-4" />
             <p className="px-4 text-[10px] font-black text-gray-300 uppercase tracking-widest mb-2">Account & Shop</p>
             
-            <div onClick={() => requireAuth("/favorites")} className="flex items-center gap-5 p-4 rounded-2xl text-gray-500 font-bold hover:bg-gray-50 cursor-pointer transition-all active:bg-orange-50">
-               <Heart size={20} /> 
-               <span className="text-[13px] uppercase tracking-widest">Wishlist</span>
-               {isAuthenticated && favoriteCount > 0 && (
-                 <span className="ml-auto bg-red-500 text-white text-[10px] px-2 py-0.5 rounded-full font-black">{favoriteCount}</span>
-               )}
+            <div onClick={() => requireAuth("/favorites")} className="flex items-center gap-5 p-4 rounded-2xl text-gray-500 font-bold hover:bg-gray-50 cursor-pointer">
+                <Heart size={20} /> 
+                <span className="text-[13px] uppercase tracking-widest">Wishlist</span>
+                {isAuthenticated && favoriteCount > 0 && <span className="ml-auto bg-red-500 text-white text-[10px] px-2 py-0.5 rounded-full font-black">{favoriteCount}</span>}
             </div>
-            <div onClick={() => requireAuth("/cart")} className="flex items-center gap-5 p-4 rounded-2xl text-gray-500 font-bold hover:bg-gray-50 cursor-pointer transition-all active:bg-orange-50">
-               <ShoppingCart size={20} /> 
-               <span className="text-[13px] uppercase tracking-widest">My Cart</span>
-               {isAuthenticated && cartCount > 0 && (
-                 <span className="ml-auto bg-orange-600 text-white text-[10px] px-2 py-0.5 rounded-full font-black">{cartCount}</span>
-               )}
+            <div onClick={() => requireAuth("/cart")} className="flex items-center gap-5 p-4 rounded-2xl text-gray-500 font-bold hover:bg-gray-50 cursor-pointer">
+                <ShoppingCart size={20} /> 
+                <span className="text-[13px] uppercase tracking-widest">My Cart</span>
+                {isAuthenticated && cartCount > 0 && <span className="ml-auto bg-orange-600 text-white text-[10px] px-2 py-0.5 rounded-full font-black">{cartCount}</span>}
             </div>
           </div>
 
           <div className="p-8 border-t border-gray-100 bg-gray-50/50">
             {isAuthenticated ? (
-              <button onClick={handleLogout} className="w-full flex items-center justify-center gap-3 bg-red-50 text-red-600 py-4 rounded-2xl font-black text-[11px] uppercase tracking-widest shadow-sm active:scale-95 transition-all">
+              <button onClick={handleLogout} className="w-full flex items-center justify-center gap-3 bg-red-50 text-red-600 py-4 rounded-2xl font-black text-[11px] uppercase tracking-widest">
                 <LogOut size={18} /> Logout Account
               </button>
             ) : (
-              <button onClick={() => {navigate("/login"); setMobileOpen(false)}} className="w-full bg-black text-white py-4 rounded-2xl font-black text-[11px] uppercase tracking-widest shadow-lg active:scale-95 transition-all">
+              <button onClick={() => {navigate("/login"); setMobileOpen(false)}} className="w-full bg-black text-white py-4 rounded-2xl font-black text-[11px] uppercase tracking-widest shadow-lg">
                 Login / Register
               </button>
             )}
@@ -265,7 +284,7 @@ const MobileLink = ({ to, icon, label, onClick }) => (
   <NavLink to={to} onClick={onClick}>
     {({ isActive }) => (
       <div className={`flex items-center gap-5 p-4 rounded-2xl transition-all ${isActive ? "bg-orange-50 text-orange-600 font-black shadow-sm" : "text-gray-500 font-bold hover:bg-gray-50"}`}>
-        <span className={`p-2 rounded-xl transition-all ${isActive ? "bg-white text-orange-600 shadow-sm" : ""}`}>{icon}</span>
+        <span className={`p-2 rounded-xl ${isActive ? "bg-white text-orange-600 shadow-sm" : ""}`}>{icon}</span>
         <span className="text-[13px] uppercase tracking-widest">{label}</span>
       </div>
     )}
