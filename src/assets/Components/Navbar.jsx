@@ -166,7 +166,7 @@ const Navbar = () => {
             <input
               type="text"
               placeholder="Search premium gear..."
-              className="w-full bg-gray-50 border border-gray-100 rounded-full pl-11 pr-4 py-2.5 outline-none focus:ring-2 focus:ring-orange-600/10 text-sm font-medium transition-all"
+              className="w-full bg-gray-50 border border-gray-200 rounded-full pl-11 pr-4 py-2.5 outline-none focus:ring-2 focus:ring-orange-600/10 text-sm font-medium transition-all"
               value={searchTerm}
               onChange={(e) => dispatch(setSearchTerm(e.target.value))}
             />
