@@ -76,7 +76,7 @@ const Navbar = () => {
             </NavLink>
           ))}
         </ul>
-        <div className="flex items-center gap-2 text-[10px] font-black text-gray-400 uppercase tracking-widest">
+        <div className="flex items-center gap-2 text-[10px] font-black text-gray-500 uppercase tracking-widest">
           <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span> Cambodia Store
         </div>
       </div>

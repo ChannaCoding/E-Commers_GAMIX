@@ -33,7 +33,7 @@ const ProductCard = ({ product }) => {
   };
 
   return (
-    <div className="group bg-white rounded-2xl border border-gray-100 hover:border-orange-100 hover:shadow-2xl hover:shadow-orange-500/10 transition-all duration-500 overflow-hidden flex flex-col h-full relative">
+    <div className="group bg-white rounded-xl border border-gray-100 hover:border-orange-100 hover:shadow-2xl hover:shadow-orange-500/10 transition-all duration-500 overflow-hidden flex flex-col h-full relative">
       
       {/* --- Favorite Button Overlay --- */}
       <button
