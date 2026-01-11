@@ -12,7 +12,9 @@ import About from './Pages/About'
 import Login from './Pages/Login'
 import Register from './Pages/Register'
 import Favorites from './Pages/Favorites'
-import  Settings from './Pages/Settings'
+import Settings from './Pages/Settings'
+// ១. Import ProtectedRoute មកប្រើ
+import ProtectedRoute from './assets/Components/ProtectedRoute' 
 
 const App = () => {
   return (
@@ -28,8 +30,19 @@ const App = () => {
             <Route path='/cart' element={<CartPage/>}/>
             <Route path="/login" element={<Login />} />
             <Route path='/register' element={<Register/>}/>
-            <Route path="/favorites" element={<Favorites />} />
-            <Route path="/settings" element={<Settings />} />
+
+            {/* ២. ការពារទំព័រ Favorites និង Settings */}
+            <Route path="/favorites" element={
+              <ProtectedRoute>
+                <Favorites />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/settings" element={
+              <ProtectedRoute>
+                <Settings />
+              </ProtectedRoute>
+            } />
         </Routes>
     </BrowserRouter>
     </Provider>
